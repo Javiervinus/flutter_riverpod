@@ -6,16 +6,14 @@ part of 'flags_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FlagsModel _$FlagsModelFromJson(Map<String, dynamic> json) {
-  return FlagsModel(
-    json['explicit'] as bool?,
-    json['nsfw'] as bool?,
-    json['political'] as bool?,
-    json['racist'] as bool?,
-    json['religious'] as bool?,
-    json['sexist'] as bool?,
-  );
-}
+FlagsModel _$FlagsModelFromJson(Map<String, dynamic> json) => FlagsModel(
+      json['explicit'] as bool?,
+      json['nsfw'] as bool?,
+      json['political'] as bool?,
+      json['racist'] as bool?,
+      json['religious'] as bool?,
+      json['sexist'] as bool?,
+    );
 
 Map<String, dynamic> _$FlagsModelToJson(FlagsModel instance) =>
     <String, dynamic>{

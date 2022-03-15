@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_tutorial/src/features/authentication/logic/auth_provider.dart';
 import 'package:riverpod_tutorial/src/features/jokes/logic/jokes_provider.dart';
 
 class JokesPage extends ConsumerWidget {
@@ -12,20 +14,47 @@ class JokesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final state = watch(jokesNotifierProvider);
+    var state2 = watch(authNotifierProvider);
+
     var joke = context.read(jokesNotifierProvider.notifier).getJ();
 
     return Scaffold(
-      appBar: AppBar(title: Text(joke?.setup ?? "vacio")),
+      appBar: AppBar(
+        title: Text(joke?.setup ?? "vacio"),
+        leading: const AutoBackButton(),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _JokeConsumer(),
-            const SizedBox(height: 50),
-            _ButtonConsumer(),
-            // Text(joke != null ? joke.delivery! : "vacio")
+            Center(
+              child: Text(state2.whenOrNull(
+                      data: (value) => value.usuario?.nombre ?? "Anonimo",
+                      error: (value) => value.toString()) ??
+                  "Anonimo"),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _JokeConsumer(),
+                  const SizedBox(height: 50),
+                  _ButtonConsumer(),
+                  ElevatedButton(
+                      onPressed: !state2.isLoading
+                          ? () {
+                              context
+                                  .read(authNotifierProvider.notifier)
+                                  .logOut(context);
+                            }
+                          : null,
+                      child: const Text("Cerrar Sesion"))
+
+                  // Text(joke != null ? joke.delivery! : "vacio")
+                ],
+              ),
+            ),
           ],
         ),
       ),

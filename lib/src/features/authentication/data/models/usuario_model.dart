@@ -12,6 +12,7 @@ class UsuarioModel extends Equatable {
   const UsuarioModel(this.id, this.nombre, this.correo, this.tipo);
   factory UsuarioModel.fromJson(Map<String, dynamic> json) =>
       _$UsuarioModelFromJson(json);
+  Map<String, dynamic> toJson() => _$UsuarioModelToJson(this);
 
   @override
   List<Object?> get props => [

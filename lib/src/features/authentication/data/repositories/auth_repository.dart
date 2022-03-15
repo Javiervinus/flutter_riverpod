@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:riverpod_tutorial/src/core/enviroment_config.dart';
+import 'package:riverpod_tutorial/src/core/env/enviroment_config.dart';
 import 'package:riverpod_tutorial/src/features/authentication/data/models/master_model.dart';
 
 abstract class IAuthRepository {
   Future<MasterModel> login(String usuario, String contrasena);
+  bool logOut();
+  bool esAnonimo = false;
   MasterModel? master;
 }
 
@@ -13,10 +15,13 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<MasterModel> login(String usuario, String contrasena) async {
     try {
-      final result = await _dioClient
-          .post(EnvironmentConfig.apiUrl + "auth/login/admin-empresas");
-      if (result.statusCode == 200) {
-        master = result.data;
+      var data = {"usuario": usuario, "contrasena": contrasena};
+      final result = await _dioClient.post(
+          EnvironmentConfig.apiUrl + "auth/login/admin-empresas",
+          data: data);
+      if (result.statusCode == 201) {
+        master = MasterModel.fromJson(result.data);
+        esAnonimo = false;
         return MasterModel.fromJson(result.data);
       } else {
         throw Exception();
@@ -27,5 +32,15 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
+  bool logOut() {
+    master = null;
+    esAnonimo = false;
+    return true;
+  }
+
+  @override
   MasterModel? master;
+
+  @override
+  bool esAnonimo = false;
 }

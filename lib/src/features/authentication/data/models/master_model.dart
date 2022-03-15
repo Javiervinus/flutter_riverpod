@@ -16,6 +16,8 @@ class MasterModel extends Equatable {
 
   factory MasterModel.fromJson(Map<String, dynamic> json) =>
       _$MasterModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MasterModelToJson(this);
   @override
   List<Object?> get props => [idEmpresa, usuario, rol, accessToken];
 }
